@@ -21,11 +21,11 @@ public struct atomFields : IComponentData
     //   authoring the data in the Editor.
     
     public float centroidGrav_ui;
-    public float spaceBetween_ui;
+    public float socialDistance_ui;
     public float direction_ui;
     public float playerGrav_ui;
-    public float radar;
-    public float vel_ui;
+    public float radar_ui;
+    public float speed;
     public float3 position;
     public float3 velocity;
     public float3 acc;
