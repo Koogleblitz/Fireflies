@@ -7,6 +7,7 @@ using Unity.Mathematics;
 public class SpeedAuth : MonoBehaviour
 {
     public float value;
+    public float speed;
     public float3 testPos;
 }
 
@@ -27,7 +28,8 @@ public class SpeedBaker: Baker<SpeedAuth>
 
         AddComponent(new AtomFields
         {
-           testPos = authoring.testPos
+           testPos = authoring.testPos,
+           speed = authoring.speed
         });
     }
 

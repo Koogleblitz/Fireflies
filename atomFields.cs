@@ -15,11 +15,14 @@ public struct AtomFields : IComponentData
     public float direction_ui;
     public float playerGrav_ui;
     public float radar_ui;
+
     public float speed;
     public float3 position;
     public float3 velocity;
     public float3 acc;
     public float posIncrement;
+
+
     public float3 playerShip;
     public int sector;
 

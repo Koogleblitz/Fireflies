@@ -32,14 +32,19 @@ public partial class SystTest : SystemBase
 
 
 
-    //[]--  Move atom referincing a multi-field component AtomField with two AddComponents in the same Baker
+    //[]--  Move atom referincing 2 fields from a multi-field component AtomField with two AddComponents in the same Baker
     protected override void OnUpdate()
     {
-        foreach ((TransformAspect transformAspect, RefRW<AtomFields> target) in SystemAPI.Query<TransformAspect, RefRW<AtomFields>>())
+        foreach ((TransformAspect transpect, RefRW<AtomFields> target) in SystemAPI.Query<TransformAspect, RefRW<AtomFields>>())
         {
-            float3 dir = math.normalize(target.ValueRW.testPos - transformAspect.Position);
+            float speed= target.ValueRW.speed;
+            float3 targetPos = target.ValueRW.testPos;
+            float3 selfPos = transpect.Position;
+            float3 dir = math.normalize(targetPos - selfPos);
 
-            transformAspect.Position += dir * SystemAPI.Time.DeltaTime;
+            transpect.Position += dir * speed * SystemAPI.Time.DeltaTime;
+            transpect.LookAt(targetPos);
+            
         }
     }
 }
