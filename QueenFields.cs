@@ -6,7 +6,7 @@ using UnityEngine;
 using Unity.Mathematics;
 
 //[Serializable]
-public struct AtomFields : IComponentData
+public struct QueenFields : IComponentData
 {
 
 
