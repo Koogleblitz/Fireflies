@@ -4,7 +4,7 @@ using Unity.Entities;
 using Unity.Transforms;
 using Unity.Mathematics;
 using UnityEngine;
-using Unity.Mathematics;
+
 
 
 public partial class SystTest : SystemBase
@@ -34,48 +34,67 @@ public partial class SystTest : SystemBase
 
     //[x]--  Move atom referincing 2 fields from a multi-field component AtomField with two AddComponents in the same Baker
     //[x]--  Able to manipulate direction and rotation by some basic logic
-    int cnt= 0;
+    uint cnt= 1;
+    public uint clusterosity= 200;
+    
     protected override void OnUpdate()
     {
+        float deltaTime= SystemAPI.Time.DeltaTime;
+        Unity.Mathematics.Random rand= new Unity.Mathematics.Random(cnt/clusterosity + 1);
         float3 sigmaPos= new float3(0,0,0);
+        //float3 randPos= float3.zero;
         EntityQuery atoms= EntityManager.CreateEntityQuery(typeof(AtomFields));
         int atomCount= atoms.CalculateEntityCount();
 
 
         foreach ((TransformAspect transpect, RefRW<AtomFields> atom) in SystemAPI.Query<TransformAspect, RefRW<AtomFields>>()){
-            
             float3 atomPos = transpect.Position;
             sigmaPos+=atomPos;
+            
         }
-        float3 centroid= (sigmaPos/atomCount);
 
-
+        
 
         foreach ((TransformAspect transpect, RefRW<AtomFields> atom) in SystemAPI.Query<TransformAspect, RefRW<AtomFields>>())
         {
             //[+]-- Get position and stuff -----//
+            
             float speed= atom.ValueRW.speed;
             float3 selfPos = transpect.Position;
-            float3 dist=  centroid - selfPos;
-
-            float3 targetPos= atom.ValueRW.targetPos;
-            //float3 targetPos = centroid + atom.ValueRW.targetPos;
-
-            // if(dist[0]>0 ){
-            //     targetPos= centroid;
-            // }else{
-            //     //targetPos = atom.ValueRW.targetPos;
-            //     targetPos = -centroid;
-            // }
+            float displacement= math.distance(selfPos, float3.zero);
+            float3 centroid= (sigmaPos/atomCount);
             
-            
-            float3 dir = math.normalize(targetPos - selfPos);
-            float3 deltaPos= dir * speed * SystemAPI.Time.DeltaTime;
+            float radius=  (math.distance(centroid, selfPos)) + 0.1f;
+            float3 randPos= rand.NextFloat3(float3.zero, new float3(10,10,10));
 
+
+            float3 targetPos = (math.normalize(centroid)*radius)*0.1f + randPos*(cnt/10)  ;
+            targetPos+= math.normalize(-targetPos)*displacement;
+            
+
+            //float3 targetPos= randPos*3;
+            Debug.Log(centroid);
+
+
+            
+
+     
+            
+            // Get direction and step size
+            float3 distVector= (targetPos- selfPos);
+            float3 dir = math.normalize(distVector);
+            float3 deltaPos= dir * speed * deltaTime;
+           
+   
+  
             //Move one step, adjust orientation to the direction of of step
             transpect.Position += deltaPos;
-            transpect.LookAt(transpect.Position+deltaPos);
-            
+
+           
+            // if(math.distance(selfPos, targetPos)>5){
+            //     transpect.LookAt(transpect.Position+distVector );
+            // }
+            transpect.LookAt(selfPos+distVector );
         }
 
 
@@ -90,15 +109,12 @@ public partial class SystTest : SystemBase
             float3 selfPos = transpect.Position;
             float3 dir = math.normalize(targetPos - selfPos);
 
-            transpect.Position += dir * speed * SystemAPI.Time.DeltaTime;
+            transpect.Position += dir * speed * deltaTime;
             transpect.LookAt(targetPos);
+
             
         }
-        if(cnt<10000){
-            cnt= cnt+1;
-        }else{
-            cnt= 0;
-        }
+        cnt= (cnt<=1000)? cnt+1 : 1;
 
     }
 }

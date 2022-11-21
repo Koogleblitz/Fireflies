@@ -9,6 +9,9 @@ using Unity.Mathematics;
 
 public partial class SpawnSysBase : SystemBase
 {
+    int popCap= 300;
+    int spawnInterval = 1;
+    int cnt= 0;
     protected override void OnUpdate()
     {
 
@@ -26,11 +29,16 @@ public partial class SpawnSysBase : SystemBase
 
 
 
-        int popCap= 100;
+
         if(atoms.CalculateEntityCount() < popCap){
+            cnt= (cnt<=1000)? cnt+1 : 0;
 
             //Create the entity using the spawner's prefab field
+            // if (cnt%spawnInterval==0){
+            //     Entity spawnedEntity= cmdBuffer.Instantiate(queenSpawn.prefab);
+            // }
             Entity spawnedEntity= cmdBuffer.Instantiate(queenSpawn.prefab);
+            
 
             //[+]-- we can use this snippet to adjust the field values that the entity will spawn with
             // cmdBuffer.SetComponent(spawnedEntity, new SpeedTest{
