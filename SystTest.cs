@@ -9,31 +9,7 @@ using UnityEngine;
 
 public partial class SystTest : SystemBase
 {
-    //[x]-- Move atom WITHOUT referencing component field
-    /*    protected override void OnUpdate()
-        {
-            foreach (TransformAspect transformAspect in SystemAPI.Query<TransformAspect>())
-            {
-                transformAspect.Position += new float3(SystemAPI.Time.DeltaTime, 0, 0);
-            }
-        }*/
-
-
-
-
-    //[x]-- Move atom WITH referencing component field
-    /*  protected override void OnUpdate()
-      {
-          foreach ((TransformAspect transformAspect, RefRO<SpeedTest> speed) in SystemAPI.Query<TransformAspect, RefRO<SpeedTest>>())
-          {
-              transformAspect.Position += new float3(SystemAPI.Time.DeltaTime*speed.ValueRO.value, 0, 0);
-          }
-      }*/
-
-
-
-    //[x]--  Move atom referincing 2 fields from a multi-field component AtomField with two AddComponents in the same Baker
-    //[x]--  Able to manipulate direction and rotation by some basic logic
+    
     uint cnt= 1;
     public uint clusterosity= 100;
     public int randFactor= 300;
@@ -69,7 +45,7 @@ public partial class SystTest : SystemBase
 
 
 
-            float3 targetPos = (math.normalize(centroid)*radius)*0.1f + randPos*(cnt/10)  ;
+            float3 targetPos = (math.normalize(centroid)*radius) + randPos  ;
             targetPos+= math.normalize(-targetPos)*displacement;
             
 
@@ -99,22 +75,7 @@ public partial class SystTest : SystemBase
         }
 
 
-        foreach ((TransformAspect transpect, RefRW<QueenFields> queen) in SystemAPI.Query<TransformAspect, RefRW<QueenFields>>())
-        {
 
-
-            float speed= queen.ValueRW.speed;
-            float3 targetPos = queen.ValueRW.targetPos;
-
-
-            float3 selfPos = transpect.Position;
-            float3 dir = math.normalize(targetPos - selfPos);
-
-            transpect.Position += dir * speed * deltaTime;
-            transpect.LookAt(targetPos);
-
-            
-        }
         cnt= (cnt<=1000)? cnt+1 : 1;
 
     }
