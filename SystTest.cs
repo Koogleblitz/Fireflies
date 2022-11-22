@@ -35,7 +35,8 @@ public partial class SystTest : SystemBase
     //[x]--  Move atom referincing 2 fields from a multi-field component AtomField with two AddComponents in the same Baker
     //[x]--  Able to manipulate direction and rotation by some basic logic
     uint cnt= 1;
-    public uint clusterosity= 200;
+    public uint clusterosity= 100;
+    public int randFactor= 300;
     
     protected override void OnUpdate()
     {
@@ -58,21 +59,21 @@ public partial class SystTest : SystemBase
         foreach ((TransformAspect transpect, RefRW<AtomFields> atom) in SystemAPI.Query<TransformAspect, RefRW<AtomFields>>())
         {
             //[+]-- Get position and stuff -----//
-            
             float speed= atom.ValueRW.speed;
             float3 selfPos = transpect.Position;
             float displacement= math.distance(selfPos, float3.zero);
             float3 centroid= (sigmaPos/atomCount);
-            
+            float3 randRange= new float3(1,1,1)*randFactor;
             float radius=  (math.distance(centroid, selfPos)) + 0.1f;
-            float3 randPos= rand.NextFloat3(float3.zero, new float3(10,10,10));
+            float3 randPos= rand.NextFloat3(selfPos-randRange, selfPos+randRange);
+
 
 
             float3 targetPos = (math.normalize(centroid)*radius)*0.1f + randPos*(cnt/10)  ;
             targetPos+= math.normalize(-targetPos)*displacement;
             
 
-            //float3 targetPos= randPos*3;
+
             Debug.Log(centroid);
 
 
