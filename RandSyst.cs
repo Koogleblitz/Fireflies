@@ -7,12 +7,12 @@ using UnityEngine;
 
 
 
-public partial class SystTest : SystemBase
+public partial class RandSyst : SystemBase
 {
     
     uint cnt= 1;
     public uint clusterosity= 100;
-    public int randFactor= 300;
+    public int randFactor= 200;
     
     protected override void OnUpdate()
     {
@@ -36,6 +36,7 @@ public partial class SystTest : SystemBase
         {
             //[+]-- Get position and stuff -----//
             float speed= atom.ValueRW.speed;
+            float randomness= atom.ValueRW.randomness;
             float3 selfPos = transpect.Position;
             float displacement= math.distance(selfPos, float3.zero);
             float3 centroid= (sigmaPos/atomCount);
@@ -45,12 +46,12 @@ public partial class SystTest : SystemBase
 
 
 
-            float3 targetPos = (math.normalize(centroid)*radius) + randPos  ;
+            float3 targetPos = (math.normalize(centroid)*radius)*0 + randPos  ;
             targetPos+= math.normalize(-targetPos)*displacement;
             
 
 
-            Debug.Log(centroid);
+            
 
 
             
@@ -60,7 +61,7 @@ public partial class SystTest : SystemBase
             // Get direction and step size
             float3 distVector= (targetPos- selfPos);
             float3 dir = math.normalize(distVector);
-            float3 deltaPos= dir * speed * deltaTime;
+            float3 deltaPos= dir * speed * deltaTime * randomness;
            
    
   
