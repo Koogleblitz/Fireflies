@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   value: 0
-  speed: 23
+  speed: 12
   targetPos:
     x: 0
     y: 0

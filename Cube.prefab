@@ -118,9 +118,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96d801169ab439945baaeec068dbbfe6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: 0
-  speed: 12
+  speed: 11
+  speedLimit: 100
+  randomness: 0.1
   targetPos:
     x: 0
     y: 0
     z: 0
+  velocity:
+    x: 0
+    y: 0
+    z: 0
+  centroidGrav: 0.1
+  socialDistance: 5
+  direction: 0
+  playerGrav: 0
+  radar: 9

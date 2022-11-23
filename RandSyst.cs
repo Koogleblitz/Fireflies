@@ -7,35 +7,12 @@ using UnityEngine;
 
 
 
-public partial class SystTest : SystemBase
+public partial class RandSyst : SystemBase
 {
-    //[x]-- Move atom WITHOUT referencing component field
-    /*    protected override void OnUpdate()
-        {
-            foreach (TransformAspect transformAspect in SystemAPI.Query<TransformAspect>())
-            {
-                transformAspect.Position += new float3(SystemAPI.Time.DeltaTime, 0, 0);
-            }
-        }*/
-
-
-
-
-    //[x]-- Move atom WITH referencing component field
-    /*  protected override void OnUpdate()
-      {
-          foreach ((TransformAspect transformAspect, RefRO<SpeedTest> speed) in SystemAPI.Query<TransformAspect, RefRO<SpeedTest>>())
-          {
-              transformAspect.Position += new float3(SystemAPI.Time.DeltaTime*speed.ValueRO.value, 0, 0);
-          }
-      }*/
-
-
-
-    //[x]--  Move atom referincing 2 fields from a multi-field component AtomField with two AddComponents in the same Baker
-    //[x]--  Able to manipulate direction and rotation by some basic logic
+    
     uint cnt= 1;
-    public uint clusterosity= 200;
+    public uint clusterosity= 100;
+    public int randFactor= 200;
     
     protected override void OnUpdate()
     {
@@ -58,22 +35,23 @@ public partial class SystTest : SystemBase
         foreach ((TransformAspect transpect, RefRW<AtomFields> atom) in SystemAPI.Query<TransformAspect, RefRW<AtomFields>>())
         {
             //[+]-- Get position and stuff -----//
-            
             float speed= atom.ValueRW.speed;
+            float randomness= atom.ValueRW.randomness;
             float3 selfPos = transpect.Position;
             float displacement= math.distance(selfPos, float3.zero);
             float3 centroid= (sigmaPos/atomCount);
-            
+            float3 randRange= new float3(1,1,1)*randFactor;
             float radius=  (math.distance(centroid, selfPos)) + 0.1f;
-            float3 randPos= rand.NextFloat3(float3.zero, new float3(10,10,10));
+            float3 randPos= rand.NextFloat3(selfPos-randRange, selfPos+randRange);
 
 
-            float3 targetPos = (math.normalize(centroid)*radius)*0.1f + randPos*(cnt/10)  ;
+
+            float3 targetPos = (math.normalize(centroid)*radius)*0 + randPos  ;
             targetPos+= math.normalize(-targetPos)*displacement;
             
 
-            //float3 targetPos= randPos*3;
-            Debug.Log(centroid);
+
+            
 
 
             
@@ -83,7 +61,7 @@ public partial class SystTest : SystemBase
             // Get direction and step size
             float3 distVector= (targetPos- selfPos);
             float3 dir = math.normalize(distVector);
-            float3 deltaPos= dir * speed * deltaTime;
+            float3 deltaPos= dir * speed * deltaTime * randomness;
            
    
   
@@ -98,22 +76,7 @@ public partial class SystTest : SystemBase
         }
 
 
-        foreach ((TransformAspect transpect, RefRW<QueenFields> queen) in SystemAPI.Query<TransformAspect, RefRW<QueenFields>>())
-        {
 
-
-            float speed= queen.ValueRW.speed;
-            float3 targetPos = queen.ValueRW.targetPos;
-
-
-            float3 selfPos = transpect.Position;
-            float3 dir = math.normalize(targetPos - selfPos);
-
-            transpect.Position += dir * speed * deltaTime;
-            transpect.LookAt(targetPos);
-
-            
-        }
         cnt= (cnt<=1000)? cnt+1 : 1;
 
     }

@@ -10,13 +10,15 @@ public struct AtomFields : IComponentData
 {
 
 
-    public float centroidGrav_ui;
-    public float socialDistance_ui;
-    public float direction_ui;
-    public float playerGrav_ui;
-    public float radar_ui;
+    public float centroidGrav;
+    public float socialDistance;
+    public float direction;
+    public float playerGrav;
+    public float radar;
 
     public float speed;
+    public float speedLimit;
+    public float randomness;
     public float3 position;
     public float3 velocity;
     public float3 acc;

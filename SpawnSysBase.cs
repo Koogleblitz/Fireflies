@@ -9,7 +9,7 @@ using Unity.Mathematics;
 
 public partial class SpawnSysBase : SystemBase
 {
-    int popCap= 300;
+    int popCap= 100;
     int spawnInterval = 1;
     int cnt= 0;
     protected override void OnUpdate()
