@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7856091997457222115}
   - component: {fileID: 4917664223511360750}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: cuboidEnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -120,7 +120,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 11
   speedLimit: 100
-  randomness: 0.1
+  randomness: 1
   targetPos:
     x: 0
     y: 0
