@@ -119,5 +119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objVel: {x: 0, y: 0, z: 0}
-  objSpeedLim: 2
+  objSpeedLim: 5
   radar: 5
+  cohesionWeight: 3
+  separationWeight: 1
