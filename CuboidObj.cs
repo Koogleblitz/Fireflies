@@ -16,11 +16,13 @@ public class CuboidObj : MonoBehaviour
     public float radar;
     public float cohesionWeight;
     public float separationWeight;
+    public float alignmentWeight;
     UnityEngine.Vector3 origin= UnityEngine.Vector3.zero;
     
     
     void Start()
     {
+        //assign initial velocity as the speed limit
         objVel= this.transform.forward*objSpeedLim;
         UnityEngine.Debug.Log(objVel);  
         atom= GetComponent<CuboidObj>();    
@@ -28,8 +30,10 @@ public class CuboidObj : MonoBehaviour
 
     void Update()
     {
+        var deltaTime= Time.deltaTime;
         var atoms= FindObjectsOfType<CuboidObj>();
         var centroid= origin;
+        var avgVel= origin;
         int sampling= 0;
 
         foreach(var atom in atoms){
@@ -40,13 +44,16 @@ public class CuboidObj : MonoBehaviour
             var dist= directionVector.magnitude;
             if(dist<radar){
                 centroid+= directionVector;
+                avgVel+= atom.objVel;
                 sampling+= 1;
             }
         }   
         centroid= centroid/sampling;
+        avgVel= avgVel/sampling;
 
         atom.objVel+= (UnityEngine.Vector3.Lerp(origin, centroid, (centroid.magnitude/radar)))*cohesionWeight;
         atom.objVel-= (UnityEngine.Vector3.Lerp(origin, centroid, (radar/centroid.magnitude)))*separationWeight;
+        atom.objVel+= (UnityEngine.Vector3.Lerp(this.objVel, avgVel, deltaTime))*alignmentWeight;
 
 
 
@@ -56,7 +63,7 @@ public class CuboidObj : MonoBehaviour
         if(objVel.magnitude>objSpeedLim){
             objVel= objVel.normalized*objSpeedLim;
         }
-        this.transform.position+= objVel*Time.deltaTime;
+        this.transform.position+= objVel*deltaTime;
         this.transform.rotation= UnityEngine.Quaternion.LookRotation(objVel);
     }
 }
