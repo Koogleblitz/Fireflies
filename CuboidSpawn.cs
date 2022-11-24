@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CuboidSpawn : MonoBehaviour
 {
-    public GameObject prefab;
+    public GameObject spawnPrefab;
     public float spawnRadius;
     public int population;
     int cnt= 0;
@@ -13,7 +13,7 @@ public class CuboidSpawn : MonoBehaviour
     void Update()
     {
         if(cnt<population){
-            Instantiate(prefab, this.transform.position+ UnityEngine.Random.insideUnitSphere*spawnRadius, UnityEngine.Random.rotation);
+            Instantiate(spawnPrefab, this.transform.position+ UnityEngine.Random.insideUnitSphere*spawnRadius, UnityEngine.Random.rotation);
         }
         cnt= (cnt<population)? cnt+1 : population;
     }

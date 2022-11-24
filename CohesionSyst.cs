@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
@@ -68,7 +69,9 @@ public partial class CohesionSyst : SystemBase
 
             velocity=  centroid*(radius/radar);
 
-            
+            if(math.length(velocity)>speedLimit){
+                velocity= math.normalize(velocity)*speedLimit;
+            }
 
             // if (math.abs(math.length(velocity))<=speedLimit){
                 // if(radius>=socialDistance){
@@ -82,12 +85,12 @@ public partial class CohesionSyst : SystemBase
             
             if(radius>=socialDistance){
                 transpect.Position+= velocity*centroidGrav*deltaTime;
-                Debug.Log("within limit");
+                //Debug.Log("within limit");
             }else{
                 transpect.Position-= velocity*centroidGrav*deltaTime;
-                Debug.Log("beyond limit");
+               // Debug.Log("beyond limit");
             }
-            Debug.Log(radius);
+            //Debug.Log(radius);
 
 
 
