@@ -52,28 +52,23 @@ public class CuboidObj : MonoBehaviour
         }   
         centroid= centroid/sampling;
         avgVel= avgVel/sampling;
-        var originDist= (origin - this.transform.position).magnitude;
+        var displacement= (origin - this.transform.position).magnitude;
         var position= this.transform.position;
         var direction= position.normalized;
 
-        atom.objVel+= (UnityEngine.Vector3.Lerp(origin, centroid, (centroid.magnitude/radar)))*cohesionWeight;
-        atom.objVel-= (UnityEngine.Vector3.Lerp(origin, centroid, (radar/centroid.magnitude)))*separationWeight;
-        atom.objVel+= (UnityEngine.Vector3.Lerp(this.objVel, avgVel, deltaTime))*alignmentWeight;
-
-        if(originDist > boundary){
-            atom.objVel-= (direction* originDist) * originGravity;
-        }
+        objVel+= (UnityEngine.Vector3.Lerp(origin, centroid, (centroid.magnitude/radar)))*cohesionWeight;
+        objVel-= (UnityEngine.Vector3.Lerp(origin, centroid, (radar/centroid.magnitude)))*separationWeight;
+        objVel+= (UnityEngine.Vector3.Lerp(this.objVel, avgVel, deltaTime))*alignmentWeight;
         
 
-        UnityEngine.Debug.Log(originDist);
-
-
-
-
-
+        if(displacement > boundary){
+            atom.objVel-= (direction* displacement) * originGravity;
+        }
         if(objVel.magnitude>objSpeedLim){
             objVel= objVel.normalized*objSpeedLim;
         }
+
+
         this.transform.position+= objVel*deltaTime;
         this.transform.rotation= UnityEngine.Quaternion.LookRotation(objVel);
     }

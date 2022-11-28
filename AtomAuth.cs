@@ -14,7 +14,11 @@ public class AtomAuth : MonoBehaviour
     public float3 velocity;
 
     public float centroidGrav;
+    public float separationWeight;
+    public float alignmentWeight;
+    public float originGrav;
     public float socialDistance;
+    public float boundary;
     public float direction;
     public float playerGrav;
     public float radar;
@@ -41,7 +45,11 @@ public class AtomBaker: Baker<AtomAuth>
             velocity= author.velocity,
 
             centroidGrav= author.centroidGrav,
+            separationWeight= author.separationWeight,
+            alignmentWeight= author.alignmentWeight,
+            originGrav= author.originGrav,
             socialDistance= author.socialDistance,
+            boundary= author.boundary,
             direction= author.direction,
             playerGrav= author.playerGrav,
             radar= author.radar

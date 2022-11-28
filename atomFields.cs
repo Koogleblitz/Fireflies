@@ -11,7 +11,11 @@ public struct AtomFields : IComponentData
 
 
     public float centroidGrav;
+    public float separationWeight;
+    public float alignmentWeight;
+    public float originGrav;
     public float socialDistance;
+    public float boundary;
     public float direction;
     public float playerGrav;
     public float radar;

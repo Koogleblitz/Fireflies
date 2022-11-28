@@ -27,23 +27,10 @@ public partial class CohesionSyst : SystemBase
 
         foreach ((TransformAspect transpect, RefRW<AtomFields> atom) in SystemAPI.Query<TransformAspect, RefRW<AtomFields>>()){
             float3 atomPos = transpect.Position;
+            float3 atomVel= atom.ValueRW.velocity;
             sigmaPos+=atomPos;
-            // if(cnt<neighborhood){
-            //     sigmaPos+=atomPos;
-            // }
-
-            
-            
-
-            // foreach (TransformAspect transvect in SystemAPI.Query<TransformAspect>()){
-            //     float3 atomPos = transvect.Position;
-            //     float diff= math.distance(selfPos,atomPos);
-            //     Debug.Log(diff);
-            //     if(diff<radar){
-            //         sigmaPos+=atomPos;
-            //         radarCount+=1;
-            //     }
-            //}
+            sigmaVel+=atomVel;
+ 
         }
         
         
@@ -53,46 +40,44 @@ public partial class CohesionSyst : SystemBase
             //[+]-- Get position and stuff -----//
             float3 centroid= (sigmaPos/atomCount);
             float3 avgVel= (sigmaVel/atomCount);
+            
 
             float speed= atom.ValueRW.speed;
             float speedLimit= atom.ValueRW.speedLimit;
             float3 selfPos = transpect.Position;
-            float3 centroidGrav= atom.ValueRW.centroidGrav;
+            float centroidGrav= atom.ValueRW.centroidGrav;
+            float boundary= atom.ValueRO.boundary;
+            float originGrav= atom.ValueRO.originGrav;
             float socialDistance= atom.ValueRW.socialDistance;
+            float separationWeight= atom.ValueRW.separationWeight;
+            float alignmentWeight= atom.ValueRO.alignmentWeight;
             float3 velocity= atom.ValueRW.velocity;
+            float3 targetVel= avgVel-velocity;
             float radar = atom.ValueRW.radar;
             
 
-            float radius=  (math.distance(selfPos, centroid));
+            float radius=  (math.distance(selfPos, centroid))+ 0.000001f;
             float displacement= math.distance(selfPos, float3.zero);
+            float3 direction= math.normalize(selfPos);
 
 
-            velocity=  centroid*(radius/radar);
+            atom.ValueRW.velocity+= centroid * (radius/radar) * centroidGrav;
+            atom.ValueRW.velocity-= centroid * (radar/radius) * separationWeight;
+            atom.ValueRW.velocity+= targetVel * (deltaTime) * alignmentWeight;
 
-            if(math.length(velocity)>speedLimit){
-                velocity= math.normalize(velocity)*speedLimit;
+            if(displacement>boundary){
+                atom.ValueRW.velocity-= (direction* displacement) * originGrav;
             }
-
-            // if (math.abs(math.length(velocity))<=speedLimit){
-                // if(radius>=socialDistance){
-                //     transpect.Position+= velocity*centroidGrav*deltaTime;
-                //     Debug.Log("within limit");
-                // }else{
-                //     transpect.Position-= velocity*centroidGrav*deltaTime*10;
-                //     Debug.Log("beyond limit");
-                // }
-            // }
             
-            if(radius>=socialDistance){
-                transpect.Position+= velocity*centroidGrav*deltaTime;
-                //Debug.Log("within limit");
-            }else{
-                transpect.Position-= velocity*centroidGrav*deltaTime;
-               // Debug.Log("beyond limit");
+            UnityEngine.Debug.Log(displacement);
+
+
+            if(math.length(atom.ValueRW.velocity)>speedLimit){
+                atom.ValueRW.velocity= math.normalize(atom.ValueRW.velocity)* speedLimit;
             }
-            //Debug.Log(radius);
 
-
+            transpect.Position+= atom.ValueRW.velocity*deltaTime;
+            transpect.LookAt(atom.ValueRW.velocity);
 
         }
 
