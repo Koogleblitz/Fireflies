@@ -17,6 +17,8 @@ public class CuboidObj : MonoBehaviour
     public float cohesionWeight;
     public float separationWeight;
     public float alignmentWeight;
+    public float originGravity;
+    public float boundary;
     UnityEngine.Vector3 origin= UnityEngine.Vector3.zero;
     
     
@@ -50,11 +52,20 @@ public class CuboidObj : MonoBehaviour
         }   
         centroid= centroid/sampling;
         avgVel= avgVel/sampling;
+        var originDist= (origin - this.transform.position).magnitude;
+        var position= this.transform.position;
+        var direction= position.normalized;
 
         atom.objVel+= (UnityEngine.Vector3.Lerp(origin, centroid, (centroid.magnitude/radar)))*cohesionWeight;
         atom.objVel-= (UnityEngine.Vector3.Lerp(origin, centroid, (radar/centroid.magnitude)))*separationWeight;
         atom.objVel+= (UnityEngine.Vector3.Lerp(this.objVel, avgVel, deltaTime))*alignmentWeight;
 
+        if(originDist > boundary){
+            atom.objVel-= (direction* originDist) * originGravity;
+        }
+        
+
+        UnityEngine.Debug.Log(originDist);
 
 
 
