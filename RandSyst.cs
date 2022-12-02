@@ -10,7 +10,7 @@ using UnityEngine;
 public partial class RandSyst : SystemBase
 {
     
-    uint cnt= 1000;
+    uint cnt= 500;
     public uint clusterosity= 100;
     public int randFactor= 200;
     
@@ -48,6 +48,7 @@ public partial class RandSyst : SystemBase
         }
 
         cnt= (cnt>0)? cnt-1 : 0;
+        UnityEngine.Debug.Log(cnt);
 
     }
 }

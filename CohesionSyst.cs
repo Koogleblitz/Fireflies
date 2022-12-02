@@ -69,7 +69,7 @@ public partial class CohesionSyst : SystemBase
                 atom.ValueRW.velocity-= (direction* displacement) * originGrav;
             }
             
-            UnityEngine.Debug.Log(displacement);
+            //UnityEngine.Debug.Log(displacement);
 
 
             if(math.length(atom.ValueRW.velocity)>speedLimit){
