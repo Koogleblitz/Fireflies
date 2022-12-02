@@ -11,7 +11,9 @@ using UnityEngine;
 public partial class CohesionSyst : SystemBase
 {
     
+    uint popCap= 2000;
     uint cnt= 1;
+    uint nonRandomInterval= 2500;
 
     
     protected override void OnUpdate()
@@ -83,7 +85,10 @@ public partial class CohesionSyst : SystemBase
 
 
 
-        cnt= (cnt<=1000)? cnt+1 : 1;
+        //cnt= (cnt<=1000)? cnt+1 : 1;
+        cnt= (cnt<=(popCap+nonRandomInterval+popCap))? cnt+1 : 1;
+        
+
 
     }
 }
