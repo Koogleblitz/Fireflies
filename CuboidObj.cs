@@ -19,7 +19,7 @@ public class CuboidObj : MonoBehaviour
     public float alignmentWeight;
     public float originGravity;
     public float boundary;
-    UnityEngine.Vector3 origin= UnityEngine.Vector3.zero;
+    public UnityEngine.Vector3 origin;
     
     
     void Start()
@@ -34,8 +34,8 @@ public class CuboidObj : MonoBehaviour
     {
         var deltaTime= Time.deltaTime;
         var atoms= FindObjectsOfType<CuboidObj>();
-        var centroid= origin;
-        var avgVel= origin;
+        var centroid= UnityEngine.Vector3.zero;
+        var avgVel= UnityEngine.Vector3.zero;
         int sampling= 0;
 
         foreach(var atom in atoms){
