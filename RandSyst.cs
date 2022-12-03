@@ -9,9 +9,10 @@ using UnityEngine;
 
 public partial class RandSyst : SystemBase
 {
-    
-    uint cnt= 1000;
-    public uint clusterosity= 100;
+    uint popCap= 2000;
+    uint cnt= 1;
+    uint nonRandomInterval= 2500;
+    public uint clusterosity= 400;
     public int randFactor= 200;
     
     protected override void OnUpdate()
@@ -22,7 +23,7 @@ public partial class RandSyst : SystemBase
         EntityQuery atoms= EntityManager.CreateEntityQuery(typeof(AtomFields));
         int atomCount= atoms.CalculateEntityCount();
 
-        if(cnt>0){
+        if((cnt<=popCap) | (cnt>(popCap+nonRandomInterval))){
             foreach ((TransformAspect transpect, RefRW<AtomFields> atom) in SystemAPI.Query<TransformAspect, RefRW<AtomFields>>())
             {
                 //[+]-- Get position and stuff -----//
@@ -35,10 +36,10 @@ public partial class RandSyst : SystemBase
                 // Get direction and step size
                 float3 distVector= (randPos- selfPos);
                 float3 dir = math.normalize(distVector);
+
+
                 float3 deltaPos= dir * speed * deltaTime * randomness;
 
-    
-    
                 //Move one step, adjust orientation to the direction of of step
                 transpect.Position += deltaPos;
                 transpect.LookAt(selfPos+distVector );
@@ -47,7 +48,9 @@ public partial class RandSyst : SystemBase
             }
         }
 
-        cnt= (cnt>0)? cnt-1 : 0;
+        //cnt= (cnt>0)? cnt-1 : 0;
+        cnt= (cnt<=(popCap+nonRandomInterval+popCap))? cnt+1 : 1;
+        UnityEngine.Debug.Log(cnt);
 
     }
 }
