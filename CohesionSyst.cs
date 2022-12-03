@@ -11,7 +11,7 @@ using UnityEngine;
 public partial class CohesionSyst : SystemBase
 {
     
-    uint popCap= 2000;
+    uint popCap= 4000;
     uint cnt= 1;
     uint nonRandomInterval= 2500;
 
@@ -78,7 +78,7 @@ public partial class CohesionSyst : SystemBase
                 atom.ValueRW.velocity= math.normalize(atom.ValueRW.velocity)* speedLimit;
             }
 
-            transpect.Position+= atom.ValueRW.velocity*deltaTime;
+            transpect.Position+= atom.ValueRW.velocity*deltaTime*speed;
             transpect.LookAt(atom.ValueRW.velocity);
 
         }
