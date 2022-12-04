@@ -11,9 +11,9 @@ using UnityEngine;
 public partial class CohesionSyst : SystemBase
 {
     
-    uint popCap= 4000;
+    uint popCap= 2500;
     uint cnt= 1;
-    uint nonRandomInterval= 2500;
+    uint nonRandomInterval= 1000;
 
     
     protected override void OnUpdate()
@@ -59,7 +59,7 @@ public partial class CohesionSyst : SystemBase
             
 
             float radius=  (math.distance(selfPos, centroid))+ 0.000001f;
-            float displacement= math.distance(selfPos, float3.zero);
+            float displacement= math.distance(selfPos, float3.zero)+ 0.00000001f;
             float3 direction= math.normalize(selfPos);
 
 
@@ -68,11 +68,11 @@ public partial class CohesionSyst : SystemBase
             atom.ValueRW.velocity+= targetVel * (deltaTime) * alignmentWeight;
 
             if(displacement>boundary){
-                atom.ValueRW.velocity-= (direction* displacement) * originGrav;
+                // atom.ValueRW.velocity-= (direction* displacement) * originGrav;
+                atom.ValueRW.velocity-= direction* (displacement/boundary) * originGrav;
             }
             
-            //UnityEngine.Debug.Log(displacement);
-
+ 
 
             if(math.length(atom.ValueRW.velocity)>speedLimit){
                 atom.ValueRW.velocity= math.normalize(atom.ValueRW.velocity)* speedLimit;

@@ -9,7 +9,7 @@ using UnityEngine;
 
 public partial class RandSyst : SystemBase
 {
-    uint popCap= 4000;
+    uint popCap= 2500;
     uint cnt= 1;
     uint nonRandomInterval= 2000;
     public uint clusterosity= 400;
